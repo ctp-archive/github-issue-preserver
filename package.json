@@ -1,0 +1,30 @@
+{
+  "name": "ctp-archive-github-issues",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@11ty/eleventy": "^1.0.0",
+    "dotenv": "^14.2.0",
+    "fs-extra": "^10.0.0",
+    "luxon": "^2.3.0",
+    "markdown-it": "^12.3.2",
+    "node-fetch": "^3.2.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.5",
+    "postcss-cli": "^9.1.0",
+    "sass": "^1.49.0"
+  },
+  "scripts": {
+    "dev": "npx @11ty/eleventy --serve",
+    "fetch-issues": "node ./src/_tools/fetch-issues.js && node ./src/_tools/merge-issues-comments.js",
+    "fetch-images": "node ./src/_tools/fetch-images.js",
+    "watch:sass": "sass  --no-source-map --watch src/sass:public/css",
+    "watch:eleventy": "npx @11ty/eleventy --serve",
+    "start": "npm-run-all build:sass --parallel watch:*",
+    "build:sass": "sass  --no-source-map src/sass:public/css",
+    "build:eleventy": "npx @11ty/eleventy",
+    "build:copy": "cp -R ./_data/ ./public/assets/data",
+    "build": "npm-run-all build:guages build:sass build:eleventy build:copy"
+  }
+}
