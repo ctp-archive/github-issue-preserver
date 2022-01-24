@@ -1,0 +1,37 @@
+---
+layout: layouts/default.njk
+pagination:
+    data: labels
+    size: 1
+    alias: label
+permalink: "label/{{ label.id }}/"
+homeLink: '../..'
+---
+{% include 'header.njk' %}
+<main>
+<h1>Issues tagged with "{{label.name}}"</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Comments</th>
+        <th>Author</th>
+        <th>Labels</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for issue in label.issues %}
+        <tr>
+          <td>{{issue.created_at | ghdate}}</td>
+          <td><a href="../../issue/{{issue.number}}">{{issue.title}}</a></td>
+          <td>{{issue.comments.length}}</td>
+          <td>{{issue.user.login}}</td>
+          <td>{% for label in issue.labels %}
+            <span class="label"><a href="../{{label.id}}">{{label.name}}</a></span>
+          {% endfor %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</main>
