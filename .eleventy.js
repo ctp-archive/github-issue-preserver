@@ -1,9 +1,12 @@
 require('dotenv').config()
 const markdownIt = require('markdown-it')
 const { DateTime } = require('luxon')
+const linkify = require('linkify-it')()
 
 const md = new markdownIt({
   html: true,
+  linkify: true,
+  typographer: true,
 })
 
 const imageRegex = new RegExp('https://user-images.githubusercontent.com', 'g')

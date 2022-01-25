@@ -43,10 +43,7 @@ table th {
 
 .label {
   display: inline-block;
-  margin: 0.2rem 0.5rem;
-  background: #e7cdcd;
-  padding: 0.25rem;
-  border-radius: 2px;
+  margin: 0.5rem;
 }
 .label:first-child {
   margin-left: 0;
