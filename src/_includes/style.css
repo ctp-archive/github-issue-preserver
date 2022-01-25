@@ -63,6 +63,11 @@ table th {
 .issue .body {
   padding: 1rem;
 }
+.comment .body img,
+.issue .body img {
+  display: block;
+  margin: 0.5rem 0;
+}
 .comment .body p:first-child,
 .issue .body p:first-child {
   margin-top: 0;

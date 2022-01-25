@@ -17,6 +17,10 @@
   margin: 1rem 0;
   .body {
     padding: 1rem;
+    img {
+      display: block;
+      margin: 0.5rem 0;
+    }
     p {
       &:first-child {
         margin-top: 0;
