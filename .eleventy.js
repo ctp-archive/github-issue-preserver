@@ -14,6 +14,7 @@ const fileRegex = new RegExp(
   'https://github.com/COVID19Tracking/issues/files',
   'g'
 )
+const userRegex = new RegExp('@([/0-9a-z.-]*)', 'g')
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/sass/')
@@ -27,6 +28,10 @@ module.exports = function (eleventyConfig) {
     return content
       .replace(imageRegex, '../assets/images/github')
       .replace(fileRegex, '../assets/files/github')
+  })
+
+  eleventyConfig.addFilter('ghuser', (content) => {
+    return content.replace(userRegex, '<strong>@$1</strong>')
   })
 
   eleventyConfig.addFilter(

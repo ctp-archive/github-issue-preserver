@@ -21,7 +21,7 @@ homeLink: ''
           <td>{{issue.created_at | ghdate}}</td>
           <td><a href="issue/{{issue.number}}.html">{{issue.title}}</a></td>
           <td>{{issue.comments.length}}</td>
-          <td>{{issue.user.login}}</td>
+          <td><strong>{{issue.user.login}}</strong></td>
           <td>{% for label in issue.labels %}
             <span class="label"><a href="label/{{label.id}}.html">{{label.name}}</a></span>
           {% endfor %}</td>

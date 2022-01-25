@@ -26,7 +26,7 @@ layout: layouts/default.njk
         </div>
       </div>
       <div class="body">
-        {{issue.body | ghimage | markdown | safe}}
+        {{issue.body | ghimage | markdown | ghuser | safe}}
       </div>
     </div>
     {% if issue.comments.length %}
@@ -38,7 +38,7 @@ layout: layouts/default.njk
             <div><a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}#issuecomment-{{comment.id}}" target="_blank">Open in Github</a></div>
           </div>
           <div class="body">
-          {{comment.body | ghimage | markdown | safe}}
+          {{comment.body | ghimage | markdown | ghuser | safe}}
           </div>
         </div>
       {% endfor %}
