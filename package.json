@@ -19,10 +19,10 @@
     "dev": "npx @11ty/eleventy --serve",
     "fetch-issues": "node ./src/_tools/fetch-issues.js && node ./src/_tools/merge-issues-comments.js",
     "fetch-images": "node ./src/_tools/fetch-images.js",
-    "watch:sass": "sass  --no-source-map --watch src/sass:public/css",
+    "watch:sass": "sass  --no-source-map --watch src/sass:src/_includes",
     "watch:eleventy": "npx @11ty/eleventy --serve",
     "start": "npm-run-all build:sass --parallel watch:*",
-    "build:sass": "sass  --no-source-map src/sass:public/css",
+    "build:sass": "sass  --no-source-map src/sass:src/_includes",
     "build:eleventy": "npx @11ty/eleventy",
     "build:copy": "cp -R ./_data/ ./public/assets/data",
     "build": "npm-run-all build:sass build:eleventy build:copy"

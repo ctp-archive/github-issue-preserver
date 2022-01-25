@@ -22,8 +22,8 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addFilter('ghimage', (content) => {
     return content
-      .replace(imageRegex, '../../assets/images/github')
-      .replace(fileRegex, '../../assets/files/github')
+      .replace(imageRegex, '../assets/images/github')
+      .replace(fileRegex, '../assets/files/github')
   })
 
   eleventyConfig.addFilter(

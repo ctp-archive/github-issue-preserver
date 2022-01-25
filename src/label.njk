@@ -5,7 +5,7 @@ pagination:
     size: 1
     alias: label
 permalink: "label/{{ label.id }}.html"
-homeLink: '../../'
+homeLink: '../index.html'
 ---
 {% include 'header.njk' %}
 <main>
@@ -24,7 +24,7 @@ homeLink: '../../'
       {% for issue in label.issues %}
         <tr>
           <td>{{issue.created_at | ghdate}}</td>
-          <td><a href="../../issue/{{issue.number}}.html">{{issue.title}}</a></td>
+          <td><a href="../issue/{{issue.number}}.html">{{issue.title}}</a></td>
           <td>{{issue.comments.length}}</td>
           <td>{{issue.user.login}}</td>
           <td>{% for label in issue.labels %}
