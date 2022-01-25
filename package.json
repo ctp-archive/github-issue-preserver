@@ -25,6 +25,6 @@
     "build:sass": "sass  --no-source-map src/sass:public/css",
     "build:eleventy": "npx @11ty/eleventy",
     "build:copy": "cp -R ./_data/ ./public/assets/data",
-    "build": "npm-run-all build:guages build:sass build:eleventy build:copy"
+    "build": "npm-run-all build:sass build:eleventy build:copy"
   }
 }
