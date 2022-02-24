@@ -13,35 +13,65 @@ layout: layouts/default.njk
   <div class="issue">
     <div class="frontmatter">
       <div>
-        <p><strong>Issue number</strong> {{issue.number}}</p>
-        <p><strong>{{issue.user.login}}</strong> opened this issue on {{issue.created_at | ghdate}}</p>
+        <p>
+          <strong>Issue number</strong>
+          {{issue.number}}</p>
+        <p>
+          <strong>{{issue.user.login}}</strong> opened this issue on {{issue.created_at | ghdate}}</p>
         {% if issue.labels.length %}
-          <p><strong>Labels </strong>{% for label in issue.labels %}
-            <span class="label"><a href="../label/{{label.id}}.html">{{label.name}}</a></span>
-          {% endfor %}</p>
-          {% endif %}
-        </div>
-        <div>
-          <a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}" target="_blank">Open in Github</a>
-        </div>
+          <p>
+            <strong>Labels </strong>
+            {% for label in issue.labels %}
+              <span class="label">
+                <a href="../label/{{label.id}}.html">{{label.name}}</a>
+              </span>
+            {% endfor %}
+          </p>
+        {% endif %}
       </div>
-      <div class="body">
-        {{issue.body | ghimage | markdown | ghuser | safe}}
+      <div>
+        <a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}" target="_blank">Open in Github</a>
       </div>
     </div>
-    {% if issue.comments.length %}
-      <h2>Comments</h2>
-      {% for comment in issue.comments %}
-        <div class="comment" id="issuecomment-{{comment.id}}">
+    <div class="body">
+      {{issue.body | ghimage | markdown | ghuser | safe}}
+    </div>
+  </div>
+  {% if issue.timeline.length %}
+    {% for history in issue.timeline %}
+      {% if history.event === "commented" %}
+        <div class="comment" id="issuecomment-{{history.id}}">
           <div class="frontmatter">
-            <div><strong>{{comment.user.login}}</strong> commented on {{comment.created_at | ghdate}}</div>
-            <div><a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}#issuecomment-{{comment.id}}" target="_blank">Open in Github</a></div>
+            <div>
+              <strong>{{history.user.login}}</strong> commented on {{history.created_at | ghdate}}</div>
+            <div>
+              <a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}#issuecomment-{{history.id}}" target="_blank">Open in Github</a>
+            </div>
           </div>
           <div class="body">
-          {{comment.body | ghimage | markdown | ghuser | safe}}
+            {{history.body | ghimage | markdown | ghuser | safe}}
           </div>
         </div>
-      {% endfor %}
-    {% endif %}
-  
+      {% else %}
+        <div class="event">
+          {%if history.event === 'locked' %}
+            <strong>{{history.actor.login}}</strong> locked this on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'labeled' %}
+            <strong>{{history.actor.login}}</strong> added the label <span class="label">{{history.label.name}}</span> on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'unlabeled' %}
+            <strong>{{history.actor.login}}</strong> removed the label <span class="label">{{history.label.name}}</span> on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'reopened' %}
+            <strong>{{history.actor.login}}</strong> reopened this on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'closed' %}
+            <strong>{{history.actor.login}}</strong> closed the issue on {{history.created_at | ghdate}}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
 </main>

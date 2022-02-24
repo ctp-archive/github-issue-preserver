@@ -44,6 +44,9 @@ table th {
 .label {
   display: inline-block;
   margin: 0.5rem;
+  padding: 0 0.2rem;
+  border-radius: 3px;
+  background: #c4b4e1;
 }
 .label:first-child {
   margin-left: 0;
@@ -51,6 +54,7 @@ table th {
 .label a,
 .label a:visited {
   color: black;
+  text-decoration: none;
 }
 
 .comment,
@@ -105,4 +109,8 @@ table th {
 .issue .frontmatter .github-link:visited {
   color: blue;
   font-weight: bold;
+}
+
+.event {
+  margin: 2.5rem;
 }

@@ -1,12 +1,20 @@
 import fs from 'fs-extra'
+import { DateTime } from 'luxon'
 
 const comments = fs.readJsonSync('./_data/comments.json')
 const issues = fs.readJsonSync('./_data/issues.json')
+const timelines = fs.readJsonSync('./_data/timelines.json')
 
 const labels = []
 
 issues.forEach((issue) => {
-  issue.comments = comments.filter((comment) => comment.issue_url === issue.url)
+  const issueTimeline =
+    typeof timelines[issue.number] !== 'undefined'
+      ? timelines[issue.number]
+      : []
+  issue.timeline = issueTimeline.sort((a, b) => {
+    a.time > b.time ? -1 : 1
+  })
   issue.labels.forEach((label) => {
     if (!labels.find((existing) => existing.id === label.id)) {
       labels.push({ ...label, issues: [] })
