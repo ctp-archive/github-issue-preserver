@@ -1,25 +1,31 @@
 import dotenv from 'dotenv'
 import fs from 'fs-extra'
 import fetch from 'node-fetch'
+import {RateLimiter} from 'limiter'
 
 dotenv.config()
 
 let issues = []
 let comments = []
 let timelines = {}
+var args = process.argv.slice(2);
 
 const headers = {
   Authorization: `token ${process.env.GITHUB_TOKEN}`,
   Accept: 'application/vnd.github.v3+json',
 }
 
+const limits = new RateLimiter({ tokensPerInterval: 120, interval: "minute"})
+
 const getGithubIssues = () =>
   new Promise(async (resolve, reject) => {
     let page = 0
     const getIssues = async () => {
       console.log(`Fetch github issues page ${page}`)
+      const remainingRequests = await limits.removeTokens(1);
+
       const result = await fetch(
-        `https://api.github.com/repos/COVID19Tracking/issues/issues?page=${page}&state=all&per_page=100`,
+        `https://api.github.com/repos/COVID19Tracking/${args}/issues?page=${page}&state=all&per_page=100`,
         {
           headers,
         }
@@ -51,8 +57,9 @@ const getGithubComments = () =>
     let page = 0
     const getComments = async () => {
       console.log(`Fetch github comments page ${page}`)
+      const remainingRequests = await limits.removeTokens(1);
       const result = await fetch(
-        `https://api.github.com/repos/COVID19Tracking/issues/issues/comments?page=${page}&per_page=100`,
+        `https://api.github.com/repos/COVID19Tracking/${args}/issues/comments?page=${page}&per_page=100`,
         {
           headers,
         }
@@ -82,13 +89,16 @@ const getGithubComments = () =>
 const getGithubTimeline = () =>
   new Promise(async (resolve, reject) => {
     let current = 0
-    const getTimeline = async () => {
-      if (typeof issues[current] === 'undefined') {
+    let page = 1
+
+    const getTimeline = async (page, currentissue = current) => {
+      if (typeof issues[currentissue] === 'undefined') {
         resolve(timelines)
         return
       }
-      console.log(`Fetch github timeline for issue ${issues[current].number}`)
-      const result = await fetch(issues[current].timeline_url, {
+      console.log(`Fetch github timeline for issue ${issues[currentissue].number}, page ${page}`)
+      const remainingRequests = await limits.removeTokens(1);
+      const result = await fetch(issues[currentissue].timeline_url + "?per_page=100&page=" + page.toString(), {
         headers,
       })
         .then((response) => response.json())
@@ -96,21 +106,34 @@ const getGithubTimeline = () =>
           console.log(error)
           setImmediate(() => {
             setTimeout(() => {
-              current += 1
-              getTimeline()
+     //         current += 1
+              getTimeline(page)
             })
           })
         })
       if (!result) {
         return
       }
-      timelines[issues[current].number] = result
+
+      if (!timelines[issues[currentissue].number])
+      {
+        timelines[issues[currentissue].number] = []
+      }
+
+      timelines[issues[currentissue].number] = timelines[issues[currentissue].number].concat(result)
+
+      if (result.length === 100) {
+        page += 1
+        getTimeline(page, currentissue)
+      }
+
       setImmediate(() => {
         current += 1
-        getTimeline()
+        getTimeline(1)
       })
     }
-    getTimeline()
+
+    getTimeline(page)
   })
 
 getGithubIssues().then(() => {

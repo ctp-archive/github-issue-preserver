@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@11ty/eleventy": "^1.0.0",
+    "@11ty/eleventy": "^2.0.0",
     "base-64": "^1.0.0",
     "dotenv": "^14.2.0",
     "fs-extra": "^10.0.0",
+    "limiter": "^2.1.0",
     "linkify-it": "^3.0.3",
     "luxon": "^2.3.0",
     "markdown-it": "^12.3.2",

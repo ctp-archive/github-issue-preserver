@@ -30,11 +30,17 @@ layout: layouts/default.njk
         {% endif %}
       </div>
       <div>
-        <a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}" target="_blank">Open in Github</a>
+        <a class="github-link" href="{{issue.html_url}}" target="_blank">Open in Github</a>
       </div>
     </div>
     <div class="body">
-      {{issue.body | ghimage | markdown | ghuser | safe}}
+      
+      {% if issue.body %}
+        {{issue.body | ghimage | markdown | ghuser | safe}}
+      {% else %}
+        {{""}}
+      {% endif %}
+    </div>
     </div>
   </div>
   {% if issue.timeline.length %}
@@ -45,7 +51,7 @@ layout: layouts/default.njk
             <div>
               <strong>{{history.user.login}}</strong> commented on {{history.created_at | ghdate}}</div>
             <div>
-              <a class="github-link" href="https://github.com/COVID19Tracking/issues/issues/{{issue.number}}#issuecomment-{{history.id}}" target="_blank">Open in Github</a>
+              <a class="github-link" href="{{issue.html_url}}#issuecomment-{{history.id}}" target="_blank">Open in Github</a>
             </div>
           </div>
           <div class="body">
@@ -68,6 +74,21 @@ layout: layouts/default.njk
           {% endif %}
           {%if history.event === 'closed' %}
             <strong>{{history.actor.login}}</strong> closed the issue on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'head_ref_deleted' %}
+            <strong>{{history.actor.login}}</strong> deleted the branch on {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'committed' %}
+            <strong>{{history.author.name}}</strong> committed <a href="{{history.html_url}}">{{history.message}}</a> at {{history.author.date | ghdate}}
+          {% endif %}
+          {%if history.event === 'review_requested' %}
+            <strong>{{history.review_requester.login}}</strong> requested a review from <strong>{{history.requested_reviewer.login}}</strong> at {{history.created_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'reviewed' %}
+            <strong>{{history.user.login}}</strong> reviewed the pull request ("{{history.body}}") at {{history.submitted_at | ghdate}}
+          {% endif %}
+          {%if history.event === 'merged' %}
+            <strong>{{history.actor.login}}</strong> merged the branch at {{history.created_at | ghdate}}
           {% endif %}
         </div>
       {% endif %}

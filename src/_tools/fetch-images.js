@@ -6,8 +6,10 @@ const imageRegex = new RegExp(
   'g'
 )
 
+var args = process.argv.slice(2);
+
 const fileRegex = new RegExp(
-  `https:\/\/github.com\/COVID19Tracking\/issues\/files\/([^\)])*`,
+  `https:\/\/github.com\/COVID19Tracking\/${args}\/files\/([^\)])*`,
   'g'
 )
 
@@ -19,7 +21,11 @@ const listImages = () =>
     const comments = await fs.readJson('./_data/comments.json')
     const getImagesFromBody = (items) => {
       items.forEach((item) => {
-        const { body } = item
+        var body  =  ""
+        if(item.body){
+          body = item.body
+        }
+        console.log(item.number)
         const results = [...body.matchAll(imageRegex)]
         results.forEach((result) => {
           images.push(result[0])
@@ -41,6 +47,7 @@ const fetchImages = (images) =>
     const run = async () => {
       if (typeof images[current] === 'undefined') {
         resolve()
+        return
       }
       console.log(`${(current / images.length) * 100}% - ${images[current]}`)
       const imagePath = images[current]
@@ -71,7 +78,7 @@ const fetchFiles = (files) =>
       }
       console.log(`${(current / files.length) * 100}% - ${files[current]}`)
       const filePath = files[current]
-        .replace('https://github.com/COVID19Tracking/issues/files/', '')
+        .replace(fileRegex, '')
         .split('/')
       if (!fs.existsSync(`./src/assets/files/github/${filePath[0]}`)) {
         fs.mkdirSync(`./src/assets/files/github/${filePath[0]}`)
@@ -89,6 +96,6 @@ const fetchFiles = (files) =>
     run()
   })
 listImages().then(({ images, files }) => {
-  //fetchImages(images)
-  fetchFiles(files)
+  fetchImages(images)
+  //fetchFiles(files)
 })
